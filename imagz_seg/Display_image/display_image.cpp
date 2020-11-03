@@ -1,6 +1,7 @@
 #include <math.h>
 #include <opencv2/opencv.hpp>
 #include <iostream>
+#include <fstream>
 
 using namespace cv;
 using namespace std;
@@ -22,93 +23,196 @@ int main(int argc, char** argv)
   return -1;
  }
 
-/* An intuitive alogo for image processing*/
-double min, max;
-    Point maxLoc;
-    //this algorithm had to be updated, the doc i used used opencv 2.8 i use opencv3.0
-    //Mat im = imread("04Bxy.jpg"); im==image
-    Mat hsv; //https://en.wikipedia.org/wiki/HSL_and_HSV
-    Mat channels[3]; //list of mat(image objects)
-    // bgr -> hsv
-    cvtColor(img, hsv, COLOR_BGR2HSV); //conversion to hsv
-    split(hsv, channels); //use chanel
-    // use v channel for processing
-    Mat& ch = channels[2];
-    /*
-    */
 
-    namedWindow("hsv", WINDOW_NORMAL);
-    imshow("hsv", img);
+/*---------Image Segmentation with Distance Transform and Watershed Algorithm --------*/
 
-    // apply Otsu thresholding (if we need to, we can implement the algo by ourselves, c'est la chose à faire mdr)
-    Mat bw;
-    threshold(ch, bw, 0, 255, THRESH_BINARY | THRESH_OTSU); //in bw do a binary threshholding otsu's methos
-    //black an white image
-    namedWindow("bW", WINDOW_NORMAL);
-    imshow("bW", bw);
+ //Note the image is img loaded correctly
+  Mat src = imread("test_100x_0.03um_x100_00.png");
 
-    // close small gaps //https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_morphological_ops/py_morphological_ops.html in python, but definitely will help
-    Mat kernel = getStructuringElement(MORPH_ELLIPSE, Size(3, 3)); //elliptic filter, why elliptiC???
-    Mat morph;
-    morphologyEx(bw, morph, MORPH_CLOSE, kernel); //dilate and erode see below
-    namedWindow("morph", WINDOW_NORMAL);
-    imshow("morph", morph);
-    // take distance transform
-    Mat dist;
-    distanceTransform(morph, dist, DIST_L2, DIST_MASK_PRECISE);//Use the OpenCV function cv::distanceTransform in order to obtain the derived representation of a binary image, where the value of each pixel is replaced by its distance to the nearest background pixel, this will definitely be the the most difficult thing to code manually!!!!
-    //show
-    namedWindow("dist", WINDOW_NORMAL);
-    imshow("dist", dist);
-    // add a black border to distance transformed image. to get a good match for circles in the margin, we are adding a border
-    int borderSize = 75;
-    Mat distborder(dist.rows + 2*borderSize, dist.cols + 2*borderSize, dist.depth());
-    copyMakeBorder(dist, distborder,
-            borderSize, borderSize, borderSize, borderSize,
-            BORDER_CONSTANT | BORDER_ISOLATED, Scalar(0, 0, 0));
-    //  from the sizes of the circles in the image,
-    // a ~75 radius disk looks reasonable, so the borderSize was selected as 75,w hy though???
-    Mat distTempl;
-    Mat kernel2 = getStructuringElement(MORPH_ELLIPSE, Size(2*borderSize+1, 2*borderSize+1));
-    // erode the ~75 radius disk a bit
-    erode(kernel2, kernel2, kernel, Point(-1, -1), 10);
-    // take its distance transform. this is the template
-    distanceTransform(kernel2, distTempl, DIST_L2, DIST_MASK_PRECISE);
-    namedWindow("distTempl", WINDOW_NORMAL);
-    imshow("distTempl", distTempl);
-    // match template
-    Mat nxcor;
-    matchTemplate(distborder, distTempl, nxcor, TM_CCOEFF_NORMED);
-    minMaxLoc(nxcor, &min, &max);
-    // threshold the resulting image. we should be able to get peak regions.
-    // we'll locate the peak of each of these peak regions, what we'll do is take the peaks and they will be the image centers annd use the transform to add distance to the mix and then tada! circles
-    Mat peaks, peaks8u;
-    threshold(nxcor, peaks, max*.5, 255, THRESH_BINARY);
-    namedWindow("peaks", WINDOW_NORMAL);
-    imshow("peaks", peaks);
-    convertScaleAbs(peaks, peaks8u);
-    // find connected components. we'll use each component as a mask for distance transformed image,
-    // then extract the peak location and its strength. strength corresponds to the radius of the circle
-    vector<vector<Point>> contours; //point==pixel(class obhect)
-    vector<Vec4i> hierarchy;
-    findContours(peaks8u, contours, hierarchy, RETR_CCOMP, CHAIN_APPROX_SIMPLE, Point(0, 0));
-    for(int idx = 0; idx >= 0; idx = hierarchy[idx][0])
-    {
-        // prepare the mask
-        peaks8u.setTo(Scalar(0, 0, 0));
-        drawContours(peaks8u, contours, idx, Scalar(255, 255, 255), -1);
-        // find the max value and its location in distance transformed image using mask
-        minMaxLoc(dist, NULL, &max, NULL, &maxLoc, peaks8u);
-        // draw the circles
-        circle(img, maxLoc, (int)max, Scalar(0, 0, 255), 2); //add a circle each time
-    }
+//Construct an histogram, at first i thought of it as to use the color background but now it could be an add on
+  vector<Mat> bgr_planes;//Blue,red,green HSV too complicated for me
+  split( src, bgr_planes );
+  int histSize = 256; //BGR has 0:255
+  float range[] = { 0, 256 }; //the upper boundary is exclusive
+  const float* histRange = { range };
+  bool uniform = true, accumulate = false;
 
-String windowNameCircleImage = "The result";
-namedWindow(windowNameCircleImage, WINDOW_NORMAL);
-imshow(windowNameCircleImage, img);
+  //calcHist calculates the hisograms, this part was copied from https://docs.opencv.org/3.4/d8/dbc/tutorial_histogram_calculation.html, not that hard to understand
+  Mat b_hist, g_hist, r_hist;
+  calcHist( &bgr_planes[0], 1, 0, Mat(), b_hist, 1, &histSize, &histRange, uniform, accumulate );
+  calcHist( &bgr_planes[1], 1, 0, Mat(), g_hist, 1, &histSize, &histRange, uniform, accumulate );
+  calcHist( &bgr_planes[2], 1, 0, Mat(), r_hist, 1, &histSize, &histRange, uniform, accumulate );
 
-waitKey(0); // Wait for any keystroke in the window
+  int hist_w = 512, hist_h = 400;
+  int bin_w = cvRound( (double) hist_w/histSize );
+  Mat histImage( hist_h, hist_w, CV_8UC3, Scalar( 0,0,0) );
+  normalize(b_hist, b_hist, 0, histImage.rows, NORM_MINMAX, -1, Mat() );
+  normalize(g_hist, g_hist, 0, histImage.rows, NORM_MINMAX, -1, Mat() );
+  normalize(r_hist, r_hist, 0, histImage.rows, NORM_MINMAX, -1, Mat() );
+  //create the file
+  string name_file="histogram.txt";
+  ofstream myfile;
+  myfile.open (name_file);
 
-destroyWindow(windowNameCircleImage); //destroy the created window
+  for( int i = 1; i < histSize; i++ )
+  {
+      myfile<<b_hist.at<float>(i)<<" "<<g_hist.at<float>(i)<<" "<<r_hist.at<float>(i)<<endl;
+  }
+  myfile.close();
+
+
+
+ //Turn background black af manually
+ for (int x=0; x<src.rows; x++)
+ {
+   for (int y=0; y<src.cols; y++)
+   {
+     if ( (src.at<Vec3b>(x, y) == Vec3b(255,255,255)) || (src.at<Vec3b>(x, y) == Vec3b(255,255,255)) )
+     {
+         src.at<Vec3b>(x, y)[0] = 255; //src.at<> value of pixel in a 3 boolean vector
+         src.at<Vec3b>(x, y)[1] = 0;//(0.0.0) est la couleur black af
+         src.at<Vec3b>(x, y)[2] = 0;
+     }
+   }
+ }
+ // Show output image
+ string nameimage="blackaf";
+ namedWindow(nameimage, WINDOW_NORMAL);
+ Mat imS;
+ resize(src, imS, Size(), 0.5,0.5) ;
+ imshow(nameimage, imS);
+
+Mat hsv;
+Mat channels[3];
+cvtColor(src, hsv, COLOR_BGR2HSV);
+split(hsv, channels);
+Mat& ch = channels[3];
+nameimage="channels";
+namedWindow(nameimage, WINDOW_NORMAL);
+resize(src, imS, Size(), 0.5,0.5) ;
+imshow(nameimage, imS);
+
+
+
+
+
+
+
+
+ waitKey(0); // Wait for any keystroke in the window
+
+ destroyWindow(nameimage); //destroy the created window
+
+
+
+//
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// /* An intuitive alogo for image processing*/
+// double min, max;
+//     Point maxLoc;
+//     //this algorithm had to be updated, the doc i used used opencv 2.8 i use opencv3.0
+//     //Mat im = imread("04Bxy.jpg"); im==image
+//     Mat hsv; //https://en.wikipedia.org/wiki/HSL_and_HSV
+//     Mat channels[3]; //list of mat(image objects)
+//     // bgr -> hsv
+//     cvtColor(img, hsv, COLOR_BGR2HSV); //conversion to hsv
+//     split(hsv, channels); //use chanel
+//     // use v channel for processing
+//     Mat& ch = channels[2];
+//     /*
+//     */
+//
+//     namedWindow("hsv", WINDOW_NORMAL);
+//     imshow("hsv", img);
+//
+//     // apply Otsu thresholding (if we need to, we can implement the algo by ourselves, c'est la chose à faire mdr)
+//     Mat bw;
+//     threshold(ch, bw, 0, 255, THRESH_BINARY | THRESH_OTSU); //in bw do a binary threshholding otsu's methos
+//     //black an white image
+//     namedWindow("bW", WINDOW_NORMAL);
+//     imshow("bW", bw);
+//
+//     // close small gaps //https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_morphological_ops/py_morphological_ops.html in python, but definitely will help
+//     Mat kernel = getStructuringElement(MORPH_ELLIPSE, Size(3, 3)); //elliptic filter, why elliptiC???
+//     Mat morph;
+//     morphologyEx(bw, morph, MORPH_CLOSE, kernel); //dilate and erode see below
+//     namedWindow("morph", WINDOW_NORMAL);
+//     imshow("morph", morph);
+//     // take distance transform
+//     Mat dist;
+//     distanceTransform(morph, dist, DIST_L2, DIST_MASK_PRECISE);//Use the OpenCV function cv::distanceTransform in order to obtain the derived representation of a binary image, where the value of each pixel is replaced by its distance to the nearest background pixel, this will definitely be the the most difficult thing to code manually!!!!
+//     //show
+//     namedWindow("dist", WINDOW_NORMAL);
+//     imshow("dist", dist);
+//     // add a black border to distance transformed image. to get a good match for circles in the margin, we are adding a border
+//     int borderSize = 75;
+//     Mat distborder(dist.rows + 2*borderSize, dist.cols + 2*borderSize, dist.depth());
+//     copyMakeBorder(dist, distborder,
+//             borderSize, borderSize, borderSize, borderSize,
+//             BORDER_CONSTANT | BORDER_ISOLATED, Scalar(0, 0, 0));
+//     //  from the sizes of the circles in the image,
+//     // a ~75 radius disk looks reasonable, so the borderSize was selected as 75,w hy though???
+//     Mat distTempl;
+//     Mat kernel2 = getStructuringElement(MORPH_ELLIPSE, Size(2*borderSize+1, 2*borderSize+1));
+//     // erode the ~75 radius disk a bit
+//     erode(kernel2, kernel2, kernel, Point(-1, -1), 10);
+//     // take its distance transform. this is the template
+//     distanceTransform(kernel2, distTempl, DIST_L2, DIST_MASK_PRECISE);
+//     namedWindow("distTempl", WINDOW_NORMAL);
+//     imshow("distTempl", distTempl);
+//     // match template
+//     Mat nxcor;
+//     matchTemplate(distborder, distTempl, nxcor, TM_CCOEFF_NORMED);
+//     minMaxLoc(nxcor, &min, &max);
+//     // threshold the resulting image. we should be able to get peak regions.
+//     // we'll locate the peak of each of these peak regions, what we'll do is take the peaks and they will be the image centers annd use the transform to add distance to the mix and then tada! circles
+//     Mat peaks, peaks8u;
+//     threshold(nxcor, peaks, max*.5, 255, THRESH_BINARY);
+//     namedWindow("peaks", WINDOW_NORMAL);
+//     imshow("peaks", peaks);
+//     convertScaleAbs(peaks, peaks8u);
+//     // find connected components. we'll use each component as a mask for distance transformed image,
+//     // then extract the peak location and its strength. strength corresponds to the radius of the circle
+//     vector<vector<Point>> contours; //point==pixel(class obhect)
+//     vector<Vec4i> hierarchy;
+//     findContours(peaks8u, contours, hierarchy, RETR_CCOMP, CHAIN_APPROX_SIMPLE, Point(0, 0));
+//     for(int idx = 0; idx >= 0; idx = hierarchy[idx][0])
+//     {
+//         // prepare the mask
+//         peaks8u.setTo(Scalar(0, 0, 0));
+//         drawContours(peaks8u, contours, idx, Scalar(255, 255, 255), -1);
+//         // find the max value and its location in distance transformed image using mask
+//         minMaxLoc(dist, NULL, &max, NULL, &maxLoc, peaks8u);
+//         // draw the circles
+//         circle(img, maxLoc, (int)max, Scalar(0, 0, 255), 2); //add a circle each time
+//     }
+//
+// String windowNameCircleImage = "The result";
+// namedWindow(windowNameCircleImage, WINDOW_NORMAL);
+// imshow(windowNameCircleImage, img);
+//
+// waitKey(0); // Wait for any keystroke in the window
+//
+// destroyWindow(windowNameCircleImage); //destroy the created window
+//
+// /*------------end of intuitive algorithm*/
+//
+//
+
+
 
 
 /*the following are pretested methods, in commentary not to bother you while building, use them directly a sort of toolbox
@@ -262,4 +366,3 @@ destroyWindow(windowNameCircleImage); //destroy the created window
 
  return 0;
 }
-
