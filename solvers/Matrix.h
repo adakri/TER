@@ -1,9 +1,7 @@
 /*!
  * \file Matrix.h
  * \brief D&eacute;finition de la classe Matrix.
- * \author Zangul
- * \version 0.1
- * \date 01 juin 2009
+ 
  */
 
 #ifndef MATRIX_H
