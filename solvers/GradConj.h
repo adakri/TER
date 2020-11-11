@@ -1,9 +1,7 @@
 /*!
  * \file GradConj.h
  * \brief D&eacute;finition de la classe GradConj.
- * \author Zangul
- * \version 0.1
- * \date 01 juin 2009
+ *
  */
 
 #ifndef GRADCONJ_H
