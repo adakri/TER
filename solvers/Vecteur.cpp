@@ -1,9 +1,7 @@
 /*!
  * \file Vecteur.cpp
  * \brief D&eacute;claration des m&eacute;thodes de la classe Vecteur.
- * \author Zangul
- * \version 0.1
- * \date 01 juin 2009
+ 
  */
 
 
