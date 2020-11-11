@@ -1,10 +1,6 @@
 /*!
  * \file main.cpp
- * \brief Programme de test.
- * \author Zangul
- * \version 0.1
- * \date 01 juin 2009
- *
+
  * Programme de test pour la resolution de systemes d'&eacute;quations 
    lin&eacute;aires par la m&eacute;thode du gradient conjugu&eacute;.
  *
