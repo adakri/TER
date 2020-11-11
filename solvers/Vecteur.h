@@ -1,9 +1,7 @@
 /*!
  * \file Vecteur.h
  * \brief D&eacute;finition de la classe Vecteur.
- * \author Zangul
- * \version 0.1
- * \date 01 juin 2009
+
  */
 
 
