@@ -1,9 +1,7 @@
 /*!
  * \file GradConj.cpp
  * \brief D&eacute;claration des m&eacute;thodes de la classe GradConj.
- * \author Zangul
- * \version 0.1
- * \date 01 juin 2009
+
  */
 
 
