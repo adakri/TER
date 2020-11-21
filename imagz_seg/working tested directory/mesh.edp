@@ -1,0 +1,176 @@
+int upper = 1;
+int others = 2;
+int inner = 3;
+
+// border C01(t=0, 1){x=0; y=-1+t; label=upper;}
+// border C02(t=0, 1){x=1.5-1.5*t; y=-1; label=upper;}
+// border C03(t=0, 1){x=1.5; y=-t; label=upper;}
+// border C04(t=0, 1){x=1+0.5*t; y=0; label=others;}
+// border C05(t=0, 1){x=0.5+0.5*t; y=0; label=others;}
+// border C06(t=0, 1){x=0.5*t; y=0; label=others;}
+// border C11(t=0, 1){x=0.5; y=-0.5*t; label=inner;}
+// border C12(t=0, 1){x=0.5+0.5*t; y=-0.5; label=inner;}
+// border C13(t=0, 1){x=1; y=-0.5+0.5*t; label=inner;}
+//
+// int n = 5;
+// // plot(C01(-n) + C02(-n) + C03(-n) + C04(-n) + C05(-n)
+// //  + C06(-n) + C11(n) + C12(n) + C13(n), wait=true);
+//
+// mesh Th = buildmesh(C01(-n) + C02(-n) + C03(-n) + C04(-n) + C05(-n)
+//   + C06(-n) + C11(n) + C12(n) + C13(n));
+
+// plot(Th, wait=true);
+
+// cout << "Part 1 has region number " << Th(0.75, -0.25).region << endl;
+// cout << "Part 2 has redion number " << Th(0.25, -0.25).region << endl;
+
+// border a(t=0, 2*pi){x=cos(t); y=sin(t); label=1;}
+// mesh circles = buildmesh(a(10));
+// plot (circles);
+
+
+border a(t=0, 2*pi){x=-1+cos(t); y=sin(t); label=23;}
+border b(t=0, 2*pi){x=cos(t); y=-4+sin(t); label=5;}
+border c(t=0, 2*pi){x=3+cos(t); y=1+sin(t); label=8;}
+
+// plot(a(30)+b(20)+c(40));
+
+mesh tha= buildmesh(a(30)+b(20)+c(40));
+
+// plot(tha, wait=true);
+
+ifstream file("results.txt");
+
+
+
+
+
+//-----------------------------------/
+//fucking hell freefem is retarded  /
+//-----------------------------------/
+
+
+//skip comments
+//use getline to extract apended info
+int where;
+real[int] f = [0, 1, 2, 3, 4, 5];
+real[int] g(6);
+func ifstream skipcomment(ifstream &ff){
+    while(1){
+        int where = ff.tellg(); //store file position
+        string comment;
+        ff >> comment;
+        if (!ff.good()) break;
+        if (comment(0:0)=="#"){
+            getline(ff, comment);
+            cout << " -- #" << comment << endl;
+        }
+        else{
+            ff.seekg(where); //restore file position
+            break;
+        }
+    }
+    return ff;
+}
+//-
+skipcomment(file);
+string s;
+getline(file, s);
+cout<<s<<endl;
+getline(file, s);
+cout<<s<<endl;
+cout<<"123"<<endl;
+
+//skipped the two comments
+
+
+//starting
+real idx,circlex,circley,radius;
+
+file>>idx>>circlex>>circley>>radius;
+cout<<idx<<" "<<circlex<<" "<<circley<<" "<<radius<<endl;
+
+
+file>>idx>>circlex>>circley>>radius;
+cout<<idx<<" "<<circlex<<" "<<circley<<" "<<radius<<endl;
+
+
+file>>idx>>circlex>>circley>>radius;
+cout<<idx<<" "<<circlex<<" "<<circley<<" "<<radius<<endl;
+
+
+//fucking hell
+
+//gaine et pores
+
+// border test(t=0, 2*pi){x=1000*cos(t); y=1000*sin(t); label=1;};
+// mesh test1 = buildmesh(test(10));
+
+int ndim = 5;
+int mdim = 20;
+
+
+
+real x0 = -1000;
+real x1 = 1000;
+real y0 = -1000;
+real y1 = 1000;
+mesh test1 = square(ndim, mdim, [x0+(x1-x0)*x, y0+(y1-y0)*y]);
+
+plot(test1, wait=true);
+
+
+//create holes up in this bitch
+
+
+
+
+
+int nu=150;
+mesh[int] meshs(nu);
+int m=10; //maillage number
+for (int i=0; i<nu; i++)
+{
+  real idx,circlex,circley,radius;
+  file>>idx>>circlex>>circley>>radius;
+  int idxi=atoi(idx);
+  real circlexr=atof(circlex);
+  real circleyr=atof(circley);
+  real radiusr=atof(radius);
+  //cout<<idx<<" "<<circlex<<" "<<circley<<" "<<radius<<endl;
+  border circle(t=0, 2*pi){x=-circlexr+radiusr*cos(t); y=-circleyr+radiusr*sin(t); label=idxi;}
+  //plot (circle(m));
+  meshs[i]= buildmesh(circle(m));
+  //plot(meshs[i](m),  wait=true )
+  //plot(meshs[i], wait=true);
+}
+mesh meshtotal= test1 + meshs[1];
+for (int i=2; i<nu; i++)
+{
+  meshtotal = meshtotal+ meshs[i];
+};
+cout<<"op done"<<endl;
+plot(meshtotal, wait=true);
+
+
+
+
+
+
+
+
+
+
+// //gaine et pores
+// real x0 = 1.2;
+// real x1 = 1.8;
+// real y0 = 0;
+// real y1 = 1;
+//
+//
+//
+// mesh Ths = square(ndim, mdim, [x0+(x1-x0)*x, y0+(y1-y0)*y]);
+//
+//
+// meshtotal=meshtotal+Ths;
+// plot(meshtotal, wait=true);
