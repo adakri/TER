@@ -1,0 +1,57 @@
+// load "isoline"
+//
+// real[int,int] xy(3, 1); //to store the isoline points
+// int[int] be(1); //to store the begin, end couple of lines
+// {
+//     mesh Th = square(10, 10);
+//     fespace Vh(Th, P1);
+//     Vh u = sqrt(square(x-0.5) + square(y-0.5));
+//     real iso = 0.2 ;
+//     real[int] viso = [iso];
+//     plot(u, viso=viso,Th);//to see the iso line
+//
+//     int nbc = isoline(Th, u, xy, close=1, iso=iso, beginend=be, smoothing=0.1);
+//     cout << "Number of the line component = " << nbc << endl;
+//      cout << "Number of points = " << xy.m << endl;
+//      cout << "be = " << be << endl;
+//
+//      // shows the lines component
+//      for (int c = 0; c < nbc; ++c){
+//         int i0 = be[2*c], i1 = be[2*c+1]-1;
+//         cout << "Curve " << c << endl;
+//         for(int i = i0; i <= i1; ++i)
+//            cout << "x= " << xy(0,i) << " y= " << xy(1,i) << " s= " << xy(2, i) << endl;
+//         plot([xy(0, i0:i1), xy(1, i0:i1)], wait=true, viso=viso, cmm=" curve "+c);
+//   }
+// }
+//
+// cout << "length of last curve = " << xy(2, xy.m-1) << endl;
+
+real[int] xx = [0, 1, 1, 0],
+          yy = [0, 0, 1, 1];
+//radius, center of the 4 circles
+real[int] RC = [0.1, 0.05, 0.05, 0.1],
+          XC = [0.2, 0.8, 0.2, 0.8],
+          YC = [0.2, 0.8, 0.8, 0.2];
+int[int] NC = [-10,-11,-12,13]; //list number of :math:`\pm` segments of the 4 circles borders
+
+border bb(t=0, 1; i)
+{
+    // i is the index variable of the multi border loop
+    int ii = (i+1)%4;
+    real t1 = 1-t;
+    x = xx[i]*t1 + xx[ii]*t;
+    y = yy[i]*t1 + yy[ii]*t;
+    label = 0;
+}
+
+border cc(t=0, 2*pi; i)
+{
+    x = RC[i]*cos(t) + XC[i];
+    y = RC[i]*sin(t) + YC[i];
+    label = i + 1;
+}
+int[int] nn = [4, 4, 5, 7]; //4 border, with 4, 4, 5, 7 segment respectively
+plot(bb(nn), cc(NC), wait=1);
+mesh th = buildmesh(bb(nn) + cc(NC));
+plot(th, wait=1);
