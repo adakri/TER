@@ -1,3 +1,0 @@
-/home/abdel_dakri/opencv/workspace/Display_image/CMakeFiles/rebuild_cache.dir
-/home/abdel_dakri/opencv/workspace/Display_image/CMakeFiles/edit_cache.dir
-/home/abdel_dakri/opencv/workspace/Display_image/CMakeFiles/DisplayImage.dir
