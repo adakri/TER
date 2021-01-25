@@ -141,7 +141,7 @@ plot(test1, wait=true);
 //create holes up in this bitch
 
 
-/*___________________________________________________ ohhhh! tough luck, what a fucking dumb language
+/*___________________________________________________ ohhhh! tough luck, what an inconveniance
 Sometimes it can be useful to make an array of the border, but unfortunately it is incompatible with the FreeFEM syntax. To bypass this problem, if the number of segments of the discretization n is an array, we make an implicit loop on all of the values of the array, and the index variable i of the loop is defined after the parameter definition, like in border a(t=0, 2*pi; i) …
 */ //____________________________________________________________________________________________________________
 int nu=150; //150
