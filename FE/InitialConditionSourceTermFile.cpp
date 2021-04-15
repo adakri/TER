@@ -30,7 +30,7 @@ double neumannBC(double t, Eigen::Vector2d X, int ref, double sigma)
   nx = nx/sqrt(nx*nx+ny*ny);
   ny = ny/sqrt(nx*nx+ny*ny);
 
-  return sigma*(dX*nx + dY*ny);
+  return 0.;
 }
 
 // Dirichlet boundary condition g
@@ -42,7 +42,7 @@ double dirichletBC(double t, Eigen::Vector2d X, int ref)
 // Exact solution
 double exactSolution(double t, Eigen::Vector2d X)
 {
-  return (cos(M_PI*X(0)*(X(1)*X(1))*4.0)*sin(M_PI*(X(0)*X(0))*X(1)*5.0))/(t+1.0);
+  return 0.;
 }
 
 #define _INIT_COND_CPP
