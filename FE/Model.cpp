@@ -66,18 +66,18 @@ void Model::assembleMassAndStiffnessMatrices()
           int j(_triangles(K,hatj));
 
           // M(i,j) = M(i,j) + contribution de la _masse (hati,hatj) en hatX_q
-          double contribMass(0.5 // aire du triangle de référence
-                *_weightsMidPoints(q)
-                *_geometry->phihat(hati,_pointsMidPoints.row(q))
-                *_geometry->phihat(hatj,_pointsMidPoints.row(q))
-                *_geometry->measK(K));
-          tripletsMass.push_back({i,j,contribMass});
+          //double contribMass(0.5 // aire du triangle de référence
+                //*_weightsMidPoints(q)
+                //*_geometry->phihat(hati,_pointsMidPoints.row(q))
+                //*_geometry->phihat(hatj,_pointsMidPoints.row(q))
+                //*_geometry->measK(K));
+          //tripletsMass.push_back({i,j,contribMass});
 
           // K(i,j) = K(i,j) + contribution de la rigidité (hati,hatj) en hatX_q
-          double contribStiffness(0.5 // aire du triangle de référence
-                *_weightsMidPoints(q)
-                *_geometry->gradphi(hati,K).dot(_geometry->gradphi(hatj,K))
-                *_geometry->measK(K));
+          //double contribStiffness(0.5 // aire du triangle de référence
+                //*_weightsMidPoints(q)
+                //*_geometry->gradphi(hati,K).dot(_geometry->gradphi(hatj,K))
+                //*_geometry->measK(K));
           tripletsStiffness.push_back({i,j,contribStiffness});
         }
       }
