@@ -12,7 +12,7 @@ double initialCondition(Eigen::Vector2d X)
 // Source term (sigma is in case of exact solution)
 double sourceTerm(double t, Eigen::Vector2d X, double sigma)
 {
-  return -cos(M_PI*X(0)*(X(1)*X(1))*4.0)*sin(M_PI*(X(0)*X(0))*X(1)*5.0)*1.0/pow(t+1.0,2.0)+(M_PI*sigma*(X(1)*cos(M_PI*X(0)*(X(1)*X(1))*4.0)*cos(M_PI*(X(0)*X(0))*X(1)*5.0)*-1.0E1+X(0)*sin(M_PI*X(0)*(X(1)*X(1))*4.0)*sin(M_PI*(X(0)*X(0))*X(1)*5.0)*8.0+M_PI*(X(0)*X(0)*X(0)*X(0))*cos(M_PI*X(0)*(X(1)*X(1))*4.0)*sin(M_PI*(X(0)*X(0))*X(1)*5.0)*2.5E1+M_PI*(X(1)*X(1)*X(1)*X(1))*cos(M_PI*X(0)*(X(1)*X(1))*4.0)*sin(M_PI*(X(0)*X(0))*X(1)*5.0)*1.6E1+M_PI*(X(0)*X(0))*(X(1)*X(1))*cos(M_PI*X(0)*(X(1)*X(1))*4.0)*sin(M_PI*(X(0)*X(0))*X(1)*5.0)*1.64E2+M_PI*X(0)*(X(1)*X(1)*X(1))*cos(M_PI*(X(0)*X(0))*X(1)*5.0)*sin(M_PI*X(0)*(X(1)*X(1))*4.0)*8.0E1+M_PI*(X(0)*X(0)*X(0))*X(1)*cos(M_PI*(X(0)*X(0))*X(1)*5.0)*sin(M_PI*X(0)*(X(1)*X(1))*4.0)*8.0E1))/(t+1.0);
+  return 0.
 }
 
 // Neumann boundary condition h
