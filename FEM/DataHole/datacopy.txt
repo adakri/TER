@@ -1,0 +1,36 @@
+mesh
+Meshes/complete1.mesh
+
+sigma
+0.0008
+
+lambda
+0.54
+
+nu
+0.13
+
+
+t0
+0
+tfinal
+0.5
+dt
+0.1
+period_to_save_sol
+0.2
+
+neumann
+8 9
+
+dirichlet
+1 2 3 4
+
+initialCondition_and_sourceTerm_file
+DataRealisticSituation/InitialConditionSourceTermFile.cpp
+
+results_folder
+Results/SquareRealisticSituation
+
+is_exact_sol
+false

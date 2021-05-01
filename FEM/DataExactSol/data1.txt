@@ -1,0 +1,29 @@
+mesh
+Meshes/square1.mesh
+
+sigma
+1.07
+
+t0
+0
+tfinal
+1
+dt
+0.1
+period_to_save_sol
+0.1
+
+dirichlet
+3 4
+
+neumann
+1 2
+
+initialCondition_and_sourceTerm_file
+DataExactSol/InitialConditionSourceTermFile.cpp
+
+results_folder
+Results/Square1
+
+is_exact_sol
+true
