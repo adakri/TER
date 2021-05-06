@@ -10,14 +10,26 @@ Launch the Cmake build process once the program is installed :
 Cmake .
 ```
 ## Image_processing
-Writen by: D.Sousa-Pontes, A.Dakri
+Written by: D.Sousa-Pontes, A.Dakri
 
 In order to use the program to generate the particale detected mesh on the image Img.png:
 ```bash
 ./launsher.sh Img.png
 ```
+
+**Example of use**
+
+
 ## Solvers
 Written by: M.Ettaouchi
 
 A C++ Eigen implementation of different linear sparse matrix solvers for use in a finite element composite linear elsticity problem.
 The algorithms implemented include: Gradient conjugate, Minimal residual, Optimal step Gradient, FOM and GMRES as well as an SDP-modified GMRes variant.
+
+# Application to finite element elasticity
+Edited by: A.Dakri
+The automatic geometry and meshing tool was used in a linear elasticity simulation of Carbon/Carbon composite using the finite element method, source code in the **/FEM** directory.
+
+This is mostly a verified work, at least numerically. The user interaction is reduced to a _datafile.txt_ where all the simulation parameters are defined. To change the studied problem to another field of study (thermoelastics, magnetics, rupture mecanics, CFD ? ..) the main file to modify is _Model.cpp_, the boundary consitions are mainly constructed in _InitialCondition.cpp_. For more advanced users, the liberty is all yours to discover/modify/erase or develop any part you seem fit.
+
+**Example of Results**
