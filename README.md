@@ -21,15 +21,15 @@ In order to use the program to generate the particale detected mesh on the image
 
 The geometry detection tool in action:
 
-<img src="https://github.com/adakri/TER/blob/master/Images/test1111_best_10px.jpg?raw=true" width="500" height="500">
+<img src="https://github.com/adakri/TER/blob/master/Images/test1111_best_10px.jpg?raw=true" width="350" height="250">
 
 Topology detection:
 
-<img src="https://github.com/adakri/TER/blob/master/Images/test3_result125.jpg?raw=true" width="500" height="500">
+<img src="https://github.com/adakri/TER/blob/master/Images/test3_result125.jpg?raw=true" width="350" height="250">
 
 The result mesh:
 
-<img src="https://github.com/adakri/TER/blob/master/Images/Screenshot from 2021-04-27 16-55-35.png?raw=true" width="500" height="500">
+<img src="https://github.com/adakri/TER/blob/master/Images/Screenshot from 2021-04-27 16-55-35.png?raw=true" width="350" height="250">
 
 
 ## Solvers
