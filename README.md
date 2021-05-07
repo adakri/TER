@@ -19,9 +19,14 @@ In order to use the program to generate the particale detected mesh on the image
 
 **Example of use**
 
-![image of result](https://github.com/adakri/TER/blob/master/Images/test3_result125.jpg?raw=true)
+The geometry detection tool in action:
+<img src="https://github.com/adakri/TER/blob/master/Images/test1111_best_10px.jpg?raw=true" width="500" height="500">
 
-<img src="https://github.com/adakri/TER/blob/master/Images/test3_result125.jpg?raw=true" width="100" height="100">
+Topology detection:
+<img src="https://github.com/adakri/TER/blob/master/Images/test3_result125.jpg?raw=true" width="500" height="500">
+
+The result mesh:
+<img src="https://github.com/adakri/TER/blob/master/Images/Screenshot from 2021-04-27 16-55-35.jpg?raw=true" width="500" height="500">
 
 
 ## Solvers
@@ -37,3 +42,10 @@ The automatic geometry and meshing tool was used in a linear elasticity simulati
 This is mostly a verified work, at least numerically. The user interaction is reduced to a _datafile.txt_ where all the simulation parameters are defined. To change the studied problem to another field of study (thermoelastics, magnetics, rupture mecanics, CFD ? ..) the main file to modify is _Model.cpp_, the boundary consitions are mainly constructed in _InitialCondition.cpp_. For more advanced users, the liberty is all yours to discover/modify/erase or develop any part you seem fit.
 
 **Example of Results**
+
+Applied efforts on a fiber (model to a circle in a background of a carbon matrix)
+<img src="https://github.com/adakri/TER/blob/master/Images/0_0.5_2.jpg?raw=true" width="500" height="500">
+
+Example of post processing using the appended _.vtk_ paraview tool:
+<img src="https://github.com/adakri/TER/blob/master/Images/0.5_20_-40_diag.jpg?raw=true" width="500" height="500">
+
