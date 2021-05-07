@@ -20,12 +20,15 @@ In order to use the program to generate the particale detected mesh on the image
 **Example of use**
 
 The geometry detection tool in action:
+
 <img src="https://github.com/adakri/TER/blob/master/Images/test1111_best_10px.jpg?raw=true" width="500" height="500">
 
 Topology detection:
+
 <img src="https://github.com/adakri/TER/blob/master/Images/test3_result125.jpg?raw=true" width="500" height="500">
 
 The result mesh:
+
 <img src="https://github.com/adakri/TER/blob/master/Images/Screenshot from 2021-04-27 16-55-35.png?raw=true" width="500" height="500">
 
 
@@ -43,9 +46,11 @@ This is mostly a verified work, at least numerically. The user interaction is re
 
 **Example of Results**
 
-Applied efforts on a fiber (model to a circle in a background of a carbon matrix)
+Applied efforts on a fiber (model to a circle in a background of a carbon matrix):
+
 <img src="https://github.com/adakri/TER/blob/master/Images/0_0.5_2.png?raw=true" width="300" height="200">
 
 Example of post processing using the appended _.vtk_ paraview tool:
+
 <img src="https://github.com/adakri/TER/blob/master/Images/0.5_20_-40_diag.png?raw=true" width="300" height="200">
 
