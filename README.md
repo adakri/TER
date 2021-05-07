@@ -19,6 +19,8 @@ In order to use the program to generate the particale detected mesh on the image
 
 **Example of use**
 
+![Image of Yaktocat](https://github.com/adakri/TER/master/images/test3_result125.png)
+
 
 ## Solvers
 Written by: M.Ettaouchi
