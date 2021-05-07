@@ -19,7 +19,7 @@ In order to use the program to generate the particale detected mesh on the image
 
 **Example of use**
 
-![alt text](https://github.com/adakri/TER/blob/master/Images/test3_result125.jpg?raw=true)
+![image of result](https://github.com/adakri/TER/blob/master/Images/test3_result125.jpg?raw=true | width=100)
 
 
 ## Solvers
