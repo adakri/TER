@@ -21,7 +21,7 @@ In order to use the program to generate the particale detected mesh on the image
 
 ![image of result](https://github.com/adakri/TER/blob/master/Images/test3_result125.jpg?raw=true)
 
-<img src=https://github.com/adakri/TER/blob/master/Images/test3_result125.jpg?raw=true" width="100" height="100">
+<img src="https://github.com/adakri/TER/blob/master/Images/test3_result125.jpg?raw=true" width="100" height="100">
 
 
 ## Solvers
