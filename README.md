@@ -37,8 +37,6 @@ The result mesh:
 <img src="https://github.com/adakri/TER/blob/master/Images/Screenshot from 2021-04-27 16-55-35.png?raw=true" width="640" height="480">
 </p>
 
-<img src="https://github.com/adakri/TER/blob/master/Images/Screenshot from 2021-04-27 16-55-35.png?raw=true" width="640" height="480">
-
 
 ## Solvers
 Written by: M.Ettaouchi
