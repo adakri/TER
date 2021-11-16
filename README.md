@@ -60,5 +60,6 @@ Applied efforts on a fiber (model to a circle in a background of a carbon matrix
 
 Example of post processing using the appended _.vtk_ paraview tool:
 
+<p align="center">
 <img src="https://github.com/adakri/TER/blob/master/Images/0.5_20_-40_diag.png?raw=true" width="640" height="480">
 </p>
